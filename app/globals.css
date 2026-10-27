@@ -1,0 +1,417 @@
+@import "tailwindcss";
+
+/* ───────────── tokens ───────────── */
+:root {
+  --paper: #f4ebdd;
+  --paper-2: #ece0cc;
+  --paper-3: #e2d2b8;
+  --ink: #2a1a12;
+  --ink-soft: #5b4636;
+  --ink-mute: #8a7462;
+  --maroon: #7a1f1f;
+  --maroon-deep: #5a1414;
+  --turmeric: #d9a21b;
+  --turmeric-soft: #f0d58a;
+  --leaf: #3f5b2e;
+  --brass: #b08d57;
+  --kumkum: #c2362b;
+  --rule: color-mix(in oklab, var(--ink) 18%, transparent);
+
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  --gutter: clamp(16px, 4vw, 56px);
+}
+
+@theme inline {
+  --color-paper: var(--paper);
+  --color-paper-2: var(--paper-2);
+  --color-paper-3: var(--paper-3);
+  --color-ink: var(--ink);
+  --color-ink-soft: var(--ink-soft);
+  --color-ink-mute: var(--ink-mute);
+  --color-maroon: var(--maroon);
+  --color-maroon-deep: var(--maroon-deep);
+  --color-turmeric: var(--turmeric);
+  --color-turmeric-soft: var(--turmeric-soft);
+  --color-leaf: var(--leaf);
+  --color-brass: var(--brass);
+  --color-kumkum: var(--kumkum);
+  --color-rule: var(--rule);
+  --font-serif: var(--font-literata), var(--font-tamil), "Iowan Old Style", Georgia, serif;
+  --font-tamil: var(--font-tamil), var(--font-literata), serif;
+  --ease-out: var(--ease-out);
+}
+
+/* ───────────── base ───────────── */
+html {
+  background: var(--paper);
+  color: var(--ink);
+  -webkit-text-size-adjust: 100%;
+}
+
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+body {
+  background: var(--paper);
+  font-family: var(--font-serif);
+  font-size: 17px;
+  line-height: 1.6;
+  font-feature-settings: "kern", "liga", "onum";
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+::selection {
+  background: var(--turmeric);
+  color: var(--ink);
+}
+
+:focus-visible {
+  outline: 2px solid var(--kumkum);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+/* paper grain: fixed noise layer above everything, never intercepts input */
+body::after {
+  content: "";
+  position: fixed;
+  inset: -50%;
+  z-index: 100;
+  pointer-events: none;
+  opacity: 0.09;
+  mix-blend-mode: multiply;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='220' height='220'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.16  0 0 0 0 0.1  0 0 0 0 0.07  0 0 0 1.4 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+}
+
+/* ───────────── type ───────────── */
+.display {
+  font-family: var(--font-serif);
+  font-variation-settings: "opsz" 72;
+  font-weight: 600;
+  letter-spacing: -0.035em;
+  line-height: 0.88;
+}
+.display-italic {
+  font-style: italic;
+  font-weight: 400;
+  letter-spacing: -0.04em;
+}
+.smallcaps {
+  font-variant-caps: all-small-caps;
+  letter-spacing: 0.14em;
+  font-feature-settings: "c2sc", "smcp", "lnum";
+}
+.kicker {
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.22em;
+  font-weight: 500;
+  color: var(--ink-soft);
+}
+.tamil {
+  font-family: var(--font-tamil);
+  letter-spacing: 0;
+}
+.price {
+  font-feature-settings: "onum", "pnum";
+}
+.lnum {
+  font-feature-settings: "lnum", "tnum";
+}
+
+/* section folio: "Chapter II ─── The almanac" */
+.folio {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+  font-size: 0.78rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+}
+.folio::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: var(--rule);
+}
+
+/* hand-drawn underline that draws in on hover */
+.ink-link {
+  position: relative;
+  text-decoration: none;
+}
+.ink-link::after {
+  content: "";
+  position: absolute;
+  left: -2%;
+  right: -2%;
+  bottom: -0.28em;
+  height: 0.42em;
+  background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 10' preserveAspectRatio='none'><path d='M2 6.5C22 3 41 8 60 5.2S98 3 118 6' fill='none' stroke='%23c2362b' stroke-width='2.2' stroke-linecap='round'/></svg>")
+    no-repeat left center / 100% 100%;
+  clip-path: inset(0 100% 0 0);
+  transition: clip-path 0.5s var(--ease-out);
+}
+.ink-link:hover::after,
+.ink-link[aria-current="page"]::after {
+  clip-path: inset(0 0 0 0);
+}
+
+/* ───────────── buttons ───────────── */
+.btn {
+  --bg: var(--ink);
+  --fg: var(--paper);
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6em;
+  min-height: 48px;
+  padding: 0.85em 1.6em;
+  border-radius: 999px;
+  background: var(--bg);
+  color: var(--fg);
+  font-weight: 500;
+  font-size: 0.98rem;
+  letter-spacing: 0.01em;
+  isolation: isolate;
+  overflow: hidden;
+  transition: transform 0.4s var(--ease-out), background-color 0.3s;
+  cursor: pointer;
+}
+.btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+/* fill wipes up from the bottom on hover */
+.btn::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: var(--kumkum);
+  transform: translateY(101%);
+  border-radius: 40% 40% 0 0;
+  transition: transform 0.55s var(--ease-out), border-radius 0.55s var(--ease-out);
+}
+.btn:not(:disabled):hover::before {
+  transform: translateY(0);
+  border-radius: 0;
+}
+.btn:not(:disabled):active {
+  transform: scale(0.97);
+}
+.btn-ghost {
+  --bg: transparent;
+  --fg: var(--ink);
+  box-shadow: inset 0 0 0 1px var(--ink);
+}
+.btn-ghost:not(:disabled):hover {
+  color: var(--paper);
+}
+.btn-turmeric {
+  --bg: var(--turmeric);
+  --fg: var(--ink);
+}
+.btn-turmeric::before {
+  background: var(--ink);
+}
+.btn-turmeric:not(:disabled):hover {
+  color: var(--paper);
+}
+
+/* rotating shine border (Magic UI "Shine Border", re-coloured) */
+.shine {
+  position: relative;
+}
+.shine::after {
+  content: "";
+  position: absolute;
+  inset: -2px;
+  border-radius: inherit;
+  padding: 2px;
+  background: conic-gradient(from var(--shine-angle, 0deg), transparent 0 70%, var(--turmeric) 80%, #fff6d8 85%, var(--turmeric) 90%, transparent 100%);
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  animation: shine-spin 3.2s linear infinite;
+  pointer-events: none;
+}
+@property --shine-angle {
+  syntax: "<angle>";
+  initial-value: 0deg;
+  inherits: false;
+}
+@keyframes shine-spin {
+  to {
+    --shine-angle: 360deg;
+  }
+}
+
+/* chips */
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45em;
+  min-height: 40px;
+  padding: 0.45em 1em;
+  border-radius: 999px;
+  box-shadow: inset 0 0 0 1px var(--rule);
+  font-size: 0.9rem;
+  transition: background-color 0.25s, color 0.25s, box-shadow 0.25s;
+  cursor: pointer;
+}
+.chip[aria-pressed="true"],
+.chip[aria-checked="true"] {
+  background: var(--ink);
+  color: var(--paper);
+  box-shadow: none;
+}
+.chip:not([aria-pressed="true"]):not([aria-checked="true"]):hover {
+  box-shadow: inset 0 0 0 1px var(--ink);
+}
+
+/* breathing status dot */
+.dot-live {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--leaf);
+  box-shadow: 0 0 0 0 color-mix(in oklab, var(--leaf) 60%, transparent);
+  animation: breathe 2.4s var(--ease-in-out) infinite;
+}
+.dot-live[data-closed="true"] {
+  background: var(--kumkum);
+  animation: none;
+}
+@keyframes breathe {
+  0% {
+    box-shadow: 0 0 0 0 color-mix(in oklab, var(--leaf) 55%, transparent);
+  }
+  70% {
+    box-shadow: 0 0 0 10px transparent;
+  }
+  100% {
+    box-shadow: 0 0 0 0 transparent;
+  }
+}
+
+/* form fields */
+.field {
+  width: 100%;
+  min-height: 52px;
+  padding: 0.8em 1em;
+  background: color-mix(in oklab, var(--paper) 60%, white);
+  border: 1px solid var(--rule);
+  border-radius: 14px;
+  color: var(--ink);
+  font: inherit;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+.field:focus {
+  outline: none;
+  border-color: var(--ink);
+  box-shadow: 0 0 0 4px color-mix(in oklab, var(--turmeric) 35%, transparent);
+}
+.label {
+  display: block;
+  margin-bottom: 0.4rem;
+  font-size: 0.8rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+}
+
+/* skeleton: paper shimmer */
+.skeleton {
+  background: linear-gradient(100deg, var(--paper-2) 30%, var(--paper) 50%, var(--paper-2) 70%) 0 0 / 300% 100%;
+  animation: skeleton 1.6s linear infinite;
+  border-radius: 10px;
+}
+@keyframes skeleton {
+  to {
+    background-position: -150% 0;
+  }
+}
+
+/* marquee */
+@keyframes marquee {
+  to {
+    transform: translateX(calc(-100% - var(--gap, 2rem)));
+  }
+}
+.marquee-track {
+  animation: marquee var(--duration, 40s) linear infinite;
+  animation-direction: var(--dir, normal);
+}
+
+/* deckle: torn paper edge used between sections */
+.deckle-top {
+  -webkit-mask: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 24' preserveAspectRatio='none'><path d='M0 24V9l20-3 25 5 31-6 22 4 30-5 26 6 28-4 33 3 24-5 27 4 30-3 21 5 33-6 26 4 30-2 25 4 28-5 31 3 22-4 30 5 27-3 25 4 31-5 24 3 29-4 26 5 30-3 28 4 22-5 31 3 25-4 28 5 30-3 24 4 29-5 27 4 26-3 30 5 23-4 31 3 25-5 28 4 30-3 26 5 24-4 30 3 27-5 29 4 22-3 30 5 26-4 V24Z'/></svg>")
+      top / 100% 24px no-repeat,
+    linear-gradient(#000 0 0) 0 23px / 100% 100% no-repeat;
+  mask: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 24' preserveAspectRatio='none'><path d='M0 24V9l20-3 25 5 31-6 22 4 30-5 26 6 28-4 33 3 24-5 27 4 30-3 21 5 33-6 26 4 30-2 25 4 28-5 31 3 22-4 30 5 27-3 25 4 31-5 24 3 29-4 26 5 30-3 28 4 22-5 31 3 25-4 28 5 30-3 24 4 29-5 27 4 26-3 30 5 23-4 31 3 25-5 28 4 30-3 26 5 24-4 30 3 27-5 29 4 22-3 30 5 26-4 V24Z'/></svg>")
+      top / 100% 24px no-repeat,
+    linear-gradient(#000 0 0) 0 23px / 100% 100% no-repeat;
+}
+
+/* custom cursor: only for fine pointers */
+@media (pointer: fine) {
+  html.has-cursor,
+  html.has-cursor * {
+    cursor: none !important;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* ───────────── thermal receipt ───────────── */
+@media print {
+  body::after {
+    display: none;
+  }
+  .no-print {
+    display: none !important;
+  }
+  html,
+  body {
+    background: #fff !important;
+  }
+}
+
+/* Tamil script breaks apart with letter-spacing and has no capitals */
+html[lang="ta"] .kicker,
+html[lang="ta"] .smallcaps,
+html[lang="ta"] .folio,
+html[lang="ta"] .label {
+  letter-spacing: 0.02em;
+  text-transform: none;
+  font-variant-caps: normal;
+}
+html[lang="ta"] .display {
+  letter-spacing: 0;
+  line-height: 1.12;
+}
